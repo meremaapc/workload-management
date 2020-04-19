@@ -5,3 +5,10 @@ DB_CONFIG = {
     'dbname': 'test',
     'password': 'postgres'
 }
+
+REMOTE_SERVER_CONFIG = {
+    'host': 'ec2-3-88-117-146.compute-1.amazonaws.com',
+    'user': 'ubuntu',
+    'port': '22',
+    'key': 'course_work_key.pem'
+}

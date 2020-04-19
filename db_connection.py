@@ -1,6 +1,4 @@
 import psycopg2
-import collections
-import json
 import config
 
 
