@@ -1,7 +1,7 @@
 import time
 
 import config
-from conection import db_connection, remote_server_connection
+from connection import db_connection, remote_server_connection
 from util import logger, system_load_statistic, pid_worker, metrics_collector
 
 CLIENT_BACKEND = 'client backend'

@@ -1,3 +1,6 @@
+import domain.query_constant
+
+
 def select_resource_intensive_process(processes):
     # todo select pid and return
     for k in processes:
@@ -12,7 +15,7 @@ KILL_PG_PROCESS = "SELECT pg_cancel_backend(%s)"
 def kill_process_by_pid(pid, conn):
     try:
         cursor = conn.cursor()
-        cursor.execute(KILL_PG_PROCESS % pid)
+        cursor.execute(domain.query_constant.PG_CANCEL_BACKEND % pid)
         print("Killed pid", pid, sep=" ")
     except Exception as error:
         print(error)
