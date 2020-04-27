@@ -30,7 +30,7 @@ def analyze(database_connection, host_connection):
             # todo get from database
             pid_for_kill = pid_worker.select_resource_intensive_process(
                 filter(lambda process: process.backend_type == CLIENT_BACKEND, processes))
-            pid_worker.kill_process_by_pid(pid_for_kill)
+            pid_worker.kill_process_by_pid(pid_for_kill, database_connection)
             logger.log_message("Pid %s was killed" % pid_for_kill)
             time.sleep(config.RECALCULATE_SYSTEM_LOAD_PAUSE_SEC)
 
