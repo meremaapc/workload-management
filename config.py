@@ -1,5 +1,5 @@
 DB_CONFIG = {
-    'host': 'ec2-3-88-117-146.compute-1.amazonaws.com',
+    'host': 'ec2-54-152-228-115.compute-1.amazonaws.com',
     'user': 'postgres',
     'port': '5432',
     'dbname': 'test',
@@ -7,8 +7,14 @@ DB_CONFIG = {
 }
 
 REMOTE_SERVER_CONFIG = {
-    'host': 'ec2-3-88-117-146.compute-1.amazonaws.com',
+    'host': 'ec2-54-152-228-115.compute-1.amazonaws.com',
     'user': 'ubuntu',
     'port': '22',
     'key': 'course_work_key.pem'
 }
+
+# replace to db
+METRICS = ["pid", "%cpu", "%mem"]
+
+RECALCULATE_SYSTEM_LOAD_PAUSE_SEC = 30
+REQUEST_PAUSE_SEC = 30

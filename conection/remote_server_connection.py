@@ -2,7 +2,7 @@ import paramiko
 import config
 
 
-def host_connect():
+def connect():
     key = paramiko.RSAKey.from_private_key_file(config.REMOTE_SERVER_CONFIG["key"])
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
