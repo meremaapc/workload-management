@@ -2,7 +2,7 @@ import time
 
 import config
 from connection import db_connection, remote_server_connection, workload_managment_db_connection
-from util import logger, workload_service, pid_worker, metrics_collector
+from util import logger, workload_service, pid_worker
 
 CLIENT_BACKEND = 'client backend'
 
@@ -11,6 +11,7 @@ def workload_management_run():
     database_connection = db_connection.connect()
     host_connection = remote_server_connection.connect()
     wm_database_connection = workload_managment_db_connection.connect()
+    workload_managment_db_connection.execute_init_sql(wm_database_connection)
     try:
         analyze(database_connection, host_connection, wm_database_connection)
     except Exception as error:

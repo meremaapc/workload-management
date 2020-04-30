@@ -12,3 +12,15 @@ def connect():
                             )
     print('DB connecting successfully')
     return conn
+
+
+def execute_init_sql(conn):
+    try:
+        cursor = conn.cursor()
+        with open('sql/workload_management_create_table.sql') as script:
+            cursor.execute(script.read())
+    except Exception as error:
+        print(error)
+    finally:
+        if conn:
+            cursor.close()
