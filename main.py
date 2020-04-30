@@ -23,12 +23,10 @@ def workload_management_run():
 def analyze(database_connection, host_connection, wm_database_connection):
     while True:
         processes = db_connection.get_data_from_pg_stat_activity(database_connection)
-        # check to kill process
         critical_loading = workload_service.collect_cluster_workload(processes, wm_database_connection, host_connection)
         if not critical_loading:
             time.sleep(config.REQUEST_PAUSE_SEC)
         else:
-            # todo get from database
             pid_for_kill = pid_worker.select_resource_intensive_process(processes, host_connection, wm_database_connection)
             pid_worker.kill_process_by_pid(pid_for_kill, database_connection)
             logger.log_message("Pid %s was killed" % pid_for_kill)

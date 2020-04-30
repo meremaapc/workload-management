@@ -21,8 +21,8 @@ def calculate_process_workload(process, metrics, host_connection):
         # skip the row with the column name
         ssh_stdout.readline()
         param_res = ssh_stdout.readline().strip()
-        print(str(process.pid) + ' ' + param + ': ' + param_res + ', priority: ' + str(priority))
         process_workload += float(param_res) * priority / 100
+    print(str(process.pid) + ' workload: ' + str(process_workload))
     return process_workload
 
 
