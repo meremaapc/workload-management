@@ -5,10 +5,12 @@ COMMAND = "ps -p %s -o %s"
 
 
 def collect_cluster_workload(processes, wm_db_connection, host_connection):
+    print("active processes count = %s" % len(processes))
     metrics = get_metrics(wm_db_connection)
     cluster_workload = 0
     for process in processes:
         cluster_workload += calculate_process_workload(process, metrics, host_connection)
+    print("cluster workload %s" % cluster_workload)
     return cluster_workload >= WORKLOAD_PERCENTAGE_LIMIT
 
 
@@ -22,7 +24,7 @@ def calculate_process_workload(process, metrics, host_connection):
         ssh_stdout.readline()
         param_res = ssh_stdout.readline().strip()
         process_workload += float(param_res) * priority / 100
-    print(str(process.pid) + ' workload: ' + str(process_workload))
+    # print(str(process.pid) + ' workload: ' + str(process_workload))
     return process_workload
 
 
