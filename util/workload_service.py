@@ -3,6 +3,8 @@ import datetime
 from config import WORKLOAD_PERCENTAGE_LIMIT
 
 COMMAND = "ps -p %s -o %s"
+DELIMITER = ","
+PID_PARAM = "pid"
 
 
 def collect_cluster_workload(processes, wm_db_connection, host_connection):
@@ -12,7 +14,7 @@ def collect_cluster_workload(processes, wm_db_connection, host_connection):
     processes_info = get_info_about_all_pg_processes(host_connection, processes,
                                                      list(map(lambda metric: metric['name'], metrics)))
 
-    cluster_workload = cluster_workload = calculate_cluster_workload(processes_info, metrics_to_dict(metrics))
+    cluster_workload = calculate_cluster_workload(processes_info, metrics_to_dict(metrics))
 
     print(datetime.datetime.now(), ': cluster workload = %s' % cluster_workload)
 
@@ -30,7 +32,7 @@ def calculate_process_workload(process, metrics):
     pid = ''
     process_workload = 0
     for i in process.items():
-        if i[0] == 'pid':
+        if i[0] == PID_PARAM:
             pid = i[1]
         else:
             try:
@@ -42,10 +44,10 @@ def calculate_process_workload(process, metrics):
 
 
 def get_info_about_all_pg_processes(host_connection, processes, params):
-    params.insert(0, 'pid')
+    params.insert(0, PID_PARAM)
     ssh_stdin, ssh_stdout, ssh_stderr = host_connection.exec_command(COMMAND % (
-        ','.join(map(lambda process: str(process.pid), processes)),
-        ','.join(params)))
+        DELIMITER.join(map(lambda process: str(process.pid), processes)),
+        DELIMITER.join(params)))
     ssh_stdout.readline()
     result_list = []
     for line in ssh_stdout:
