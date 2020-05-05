@@ -1,13 +1,13 @@
 DB_CONFIG = {
-    'host': 'ec2-54-152-228-115.compute-1.amazonaws.com',
+    'host': 'ec2-54-165-11-20.compute-1.amazonaws.com',
     'user': 'postgres',
     'port': '5432',
-    'dbname': 'test',
+    'dbname': 'postgres',
     'password': 'postgres'
 }
 
 WM_DB_CONFIG = {
-    'host': 'ec2-54-152-228-115.compute-1.amazonaws.com',
+    'host': 'ec2-54-165-11-20.compute-1.amazonaws.com',
     'user': 'postgres',
     'port': '5432',
     'dbname': 'workload_management',
@@ -15,7 +15,7 @@ WM_DB_CONFIG = {
 }
 
 REMOTE_SERVER_CONFIG = {
-    'host': 'ec2-54-152-228-115.compute-1.amazonaws.com',
+    'host': 'ec2-54-165-11-20.compute-1.amazonaws.com',
     'user': 'ubuntu',
     'port': '22',
     'key': 'course_work_key.pem'
@@ -25,4 +25,4 @@ REMOTE_SERVER_CONFIG = {
 RECALCULATE_SYSTEM_LOAD_PAUSE_SEC = 30
 REQUEST_PAUSE_SEC = 30
 
-WORKLOAD_PERCENTAGE_LIMIT = 0.1
+WORKLOAD_PERCENTAGE_LIMIT = 75
