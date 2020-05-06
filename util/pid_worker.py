@@ -4,11 +4,9 @@ from util.workload_service import calculate_process_workload, get_metrics, get_i
 
 
 def select_resource_intensive_process(processes, host_connection, wm_db_connection):
-    metrics = get_metrics(wm_db_connection)
+    metrics = get_metrics(host_connection, wm_db_connection)
     # todo ?maybe need kill recent process
-    processes_info = get_info_about_all_pg_processes(host_connection, processes,
-                                                     list(map(lambda metric: metric['name'], metrics)))
-    metrics = metrics_to_dict(metrics)
+    processes_info = get_info_about_all_pg_processes(host_connection, processes, list(metrics.keys()))
     result = max(zip(
         map(lambda process: calculate_process_workload(process, metrics), processes_info),
         map(lambda process: process['pid'], processes_info))
