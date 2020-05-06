@@ -1,31 +1,64 @@
 import domain
+import datetime
 from config import WORKLOAD_PERCENTAGE_LIMIT
 
 COMMAND = "ps -p %s -o %s"
+DELIMITER = ","
+PID_PARAM = "pid"
 
 
 def collect_cluster_workload(processes, wm_db_connection, host_connection):
-    print("active processes count = %s" % len(processes))
     metrics = get_metrics(wm_db_connection)
-    cluster_workload = 0
-    for process in processes:
-        cluster_workload += calculate_process_workload(process, metrics, host_connection)
-    print("cluster workload %s" % cluster_workload)
+    print(datetime.datetime.now(), ": process count = %s" % len(processes))
+
+    processes_info = get_info_about_all_pg_processes(host_connection, processes,
+                                                     list(map(lambda metric: metric['name'], metrics)))
+
+    cluster_workload = calculate_cluster_workload(processes_info, metrics_to_dict(metrics))
+
+    print(datetime.datetime.now(), ': cluster workload = %s' % cluster_workload)
+
     return cluster_workload >= WORKLOAD_PERCENTAGE_LIMIT
 
 
-def calculate_process_workload(process, metrics, host_connection):
-    process_workload = 0.0
-    for metric in metrics:
-        param = metric['name']
-        priority = metric['priority']
-        ssh_stdin, ssh_stdout, ssh_stderr = host_connection.exec_command(COMMAND % (process.pid, param))
-        # skip the row with the column name
-        ssh_stdout.readline()
-        param_res = ssh_stdout.readline().strip()
-        process_workload += float(param_res) * priority / 100
-    # print(str(process.pid) + ' workload: ' + str(process_workload))
+def calculate_cluster_workload(processes_info, metrics):
+    cluster_workload = 0.0
+    for process in processes_info:
+        cluster_workload += calculate_process_workload(process, metrics)
+    return cluster_workload
+
+
+def calculate_process_workload(process, metrics):
+    pid = ''
+    process_workload = 0
+    for i in process.items():
+        if i[0] == PID_PARAM:
+            pid = i[1]
+        else:
+            try:
+                process_workload += float(i[1]) * metrics[i[0]] / 100
+            except Exception as error:
+                print(error)
+    print('pid %s workload is %s' % (pid, process_workload))
     return process_workload
+
+
+def get_info_about_all_pg_processes(host_connection, processes, params):
+    params.insert(0, PID_PARAM)
+    ssh_stdin, ssh_stdout, ssh_stderr = host_connection.exec_command(COMMAND % (
+        DELIMITER.join(map(lambda process: str(process.pid), processes)),
+        DELIMITER.join(params)))
+    ssh_stdout.readline()
+    result_list = []
+    for line in ssh_stdout:
+        result_list.append(dict(zip(params, line.split())))
+    return result_list
+
+
+def metrics_to_dict(metrics):
+    return dict(zip(
+        map(lambda metric: metric['name'], metrics),
+        map(lambda metric: metric['priority'], metrics)))
 
 
 def get_metrics(wm_db_connection):
