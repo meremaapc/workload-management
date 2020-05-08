@@ -8,17 +8,15 @@ CLIENT_BACKEND = 'client backend'
 
 
 def workload_management_run():
-    database_connection = db_connection.connect()
+    db_connection.create_database()
     host_connection = remote_server_connection.connect()
     wm_database_connection = workload_managment_db_connection.connect()
     workload_managment_db_connection.execute_init_sql(wm_database_connection)
-    database_connection.close()
     try:
         analyze(host_connection, wm_database_connection)
     except Exception as error:
         print(error)
     finally:
-        database_connection.close()
         host_connection.close()
 
 

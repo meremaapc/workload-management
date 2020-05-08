@@ -33,3 +33,19 @@ def get_data_from_pg_stat_activity(conn):
     finally:
         if conn:
             cursor.close()
+
+
+def create_database():
+    try:
+        conn = connect()
+        cursor = conn.cursor()
+        with open('sql/workload_management_create_database.sql') as script:
+            cursor.execute(script.read())
+        cursor.execute(domain.query_constant.CREATE_DATABASE, (config.DB_CONFIG['user'], config.DB_CONFIG['password']))
+        conn.commit()
+        conn.close()
+    except (Exception, psycopg2.Error) as error:
+        print(error)
+    finally:
+        cursor.close()
+        conn.close()
