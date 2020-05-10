@@ -1,11 +1,9 @@
 import domain.query_constant
-from util.workload_service import calculate_process_workload, get_metrics, get_info_about_all_pg_processes, \
-    metrics_to_dict
+from util.workload_service import calculate_process_workload, get_metrics, get_info_about_all_pg_processes
 
 
 def select_resource_intensive_process(processes, host_connection, wm_db_connection):
     metrics = get_metrics(host_connection, wm_db_connection)
-    # todo ?maybe need kill recent process
     processes_info = get_info_about_all_pg_processes(host_connection, processes, list(metrics.keys()))
     result = max(zip(
         map(lambda process: calculate_process_workload(process, metrics), processes_info),

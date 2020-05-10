@@ -7,13 +7,13 @@ def connect():
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    print("Start connection to host", config.REMOTE_SERVER_CONFIG["host"], sep=" ")
+    print("Start connection to host %s" % config.REMOTE_SERVER_CONFIG["host"])
 
     client.connect(
         hostname=config.REMOTE_SERVER_CONFIG['host'],
         username=config.REMOTE_SERVER_CONFIG['user'],
         pkey=key)
 
-    print("Successfully connected to host", config.REMOTE_SERVER_CONFIG["host"], sep=" ")
+    print("Successfully connected to host %s" % config.REMOTE_SERVER_CONFIG["host"])
 
     return client

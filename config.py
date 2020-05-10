@@ -1,5 +1,5 @@
-DB_CONFIG = {
-    'host': 'ec2-54-165-11-20.compute-1.amazonaws.com',
+MAIN_DB_CONFIG = {
+    'host': 'ec2-34-235-145-192.compute-1.amazonaws.com',
     'user': 'postgres',
     'port': '5432',
     'dbname': 'postgres',
@@ -7,7 +7,7 @@ DB_CONFIG = {
 }
 
 WM_DB_CONFIG = {
-    'host': 'ec2-54-165-11-20.compute-1.amazonaws.com',
+    'host': 'ec2-34-235-145-192.compute-1.amazonaws.com',
     'user': 'postgres',
     'port': '5432',
     'dbname': 'workload_management',
@@ -15,16 +15,17 @@ WM_DB_CONFIG = {
 }
 
 REMOTE_SERVER_CONFIG = {
-    'host': 'ec2-54-165-11-20.compute-1.amazonaws.com',
+    'host': 'ec2-34-235-145-192.compute-1.amazonaws.com',
     'user': 'ubuntu',
     'port': '22',
-    'key': 'course_work_key.pem'
+    'key': 'C:\\Users\\greenmapc\\Documents\\course-work\\workload-managment\\course_work_key.pem'
 }
 
 
-RECALCULATE_SYSTEM_LOAD_PAUSE_SEC = 30
-REQUEST_PAUSE_SEC = 30
+RECALCULATE_SYSTEM_LOAD_PAUSE_SEC = 45
+REQUEST_PAUSE_SEC = 45
+MONITORING_PAUSE = 30
 
-WORKLOAD_PERCENTAGE_LIMIT = 75
+WORKLOAD_PERCENTAGE_LIMIT = 10000
 
 
