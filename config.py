@@ -1,4 +1,4 @@
-DB_CONFIG = {
+MAIN_DB_CONFIG = {
     'host': 'ec2-34-235-145-192.compute-1.amazonaws.com',
     'user': 'postgres',
     'port': '5432',
@@ -16,6 +16,7 @@ WM_DB_CONFIG = {
 
 REMOTE_SERVER_CONFIG = {
     'host': 'ec2-34-235-145-192.compute-1.amazonaws.com',
+    'user': 'ubuntu',
     'port': '22',
     'key': 'C:\\Users\\greenmapc\\Documents\\course-work\\workload-managment\\course_work_key.pem'
 }
