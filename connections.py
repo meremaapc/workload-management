@@ -1,8 +1,6 @@
 from config import WM_DB_CONFIG, MAIN_DB_CONFIG
 from connection import db_connection, remote_server_connection, workload_managment_db
 
-CLIENT_BACKEND = 'client backend'
-
 
 def host_connect():
     return remote_server_connection.connect()

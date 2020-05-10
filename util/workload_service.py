@@ -1,7 +1,7 @@
 import domain
 import datetime
 from config import WORKLOAD_PERCENTAGE_LIMIT
-from util.host_info import get_cpu_core_count
+from util.host_info import get_cpu_core_count, get_ram_load
 
 COMMAND = "ps -p %s -o %s"
 DELIMITER = ","
@@ -15,34 +15,27 @@ def collect_cluster_workload(processes, wm_db_connection, host_connection):
     print(datetime.datetime.now(), ": process count = %s" % len(processes))
 
     processes_info = get_info_about_all_pg_processes(host_connection, processes, list(metrics.keys()))
-
-    cluster_workload = calculate_cluster_workload(processes_info, metrics)
+    cluster_workload = calculate_cluster_workload(host_connection, processes_info, metrics)
 
     print(datetime.datetime.now(), ': cluster workload = %s' % cluster_workload)
 
     return cluster_workload >= WORKLOAD_PERCENTAGE_LIMIT
 
 
-def calculate_cluster_workload(processes_info, metrics):
-    cluster_workload = 0.0
-    for process in processes_info:
-        cluster_workload += calculate_process_workload(process, metrics)
-    return cluster_workload
+def calculate_cluster_workload(host_connection, processes_info, metrics):
+    ram_load = get_ram_load(host_connection)
+    cpu_load = sum(map(lambda item: float(item['pcpu']), processes_info))
+    return calculate_process_workload(ram_load, cpu_load, metrics)
 
 
-def calculate_process_workload(process, metrics):
-    pid = ''
-    process_workload = 0
-    for i in process.items():
-        if i[0] == PID_PARAM:
-            pid = i[1]
-        else:
-            try:
-                process_workload += float(i[1]) * metrics[i[0]] / 100
-            except Exception as error:
-                print(error)
-    # print('pid %s workload is %s' % (pid, process_workload))
-    return process_workload
+def calculate_process_workload(cpu, ram, metrics):
+    # !todo change to formula
+    state = 50
+    if cpu > metrics['pcpu']:
+        state += 25
+    if ram > metrics['pmem']:
+        state += 25
+    return state
 
 
 def get_info_about_all_pg_processes(host_connection, processes, params):
