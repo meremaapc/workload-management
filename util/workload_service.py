@@ -2,6 +2,7 @@ import domain
 import datetime
 from config import WORKLOAD_PERCENTAGE_LIMIT
 from util.host_info import get_cpu_core_count
+from util.statistic_collector import collect_statistic
 
 COMMAND = "ps -p %s -o %s"
 DELIMITER = ","
@@ -15,6 +16,8 @@ def collect_cluster_workload(processes, wm_db_connection, host_connection):
     print(datetime.datetime.now(), ": process count = %s" % len(processes))
 
     processes_info = get_info_about_all_pg_processes(host_connection, processes, list(metrics.keys()))
+    collect_statistic(wm_db_connection,  processes_info, host_connection)
+
     cluster_workload = calculate_cluster_workload(processes_info, metrics)
 
     print(datetime.datetime.now(), ': cluster workload = %s' % cluster_workload)
@@ -40,7 +43,7 @@ def calculate_process_workload(process, metrics):
                 process_workload += float(i[1]) * metrics[i[0]] / 100
             except Exception as error:
                 print(error)
-    print('pid %s workload is %s' % (pid, process_workload))
+    # print('pid %s workload is %s' % (pid, process_workload))
     return process_workload
 
 

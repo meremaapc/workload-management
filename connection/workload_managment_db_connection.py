@@ -1,5 +1,6 @@
 import psycopg2
 import config
+import domain.query_constant
 
 
 def connect():
@@ -19,6 +20,19 @@ def execute_init_sql(conn):
         cursor = conn.cursor()
         with open('sql/workload_management_create_table.sql') as script:
             cursor.execute(script.read())
+        conn.commit()
+    except Exception as error:
+        print(error)
+    finally:
+        if conn:
+            cursor.close()
+
+
+def store_cluster_statistic(conn, cpu, ram):
+    try:
+        cursor = conn.cursor()
+        cursor.execute(domain.query_constant.INSERT_STATISTIC, (cpu, ram))
+        conn.commit()
     except Exception as error:
         print(error)
     finally:

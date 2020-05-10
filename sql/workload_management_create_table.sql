@@ -24,4 +24,10 @@ $$ language plpgsql;
 
 SELECT wm.init_insert_metrics();
 
+CREATE TABLE IF NOT EXISTS wm.cluster_statistic (
+    cpu_usage float,
+    ram_usage float,
+    date timestamp
+);
+
 COMMIT;
