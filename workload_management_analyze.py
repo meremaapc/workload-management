@@ -13,8 +13,7 @@ def workload_management_run():
         if not critical_loading:
             time.sleep(config.REQUEST_PAUSE_SEC)
         else:
-            pid_for_kill = pid_worker.select_resource_intensive_process(processes, host_connection,
-                                                                        wm_database_connection)
+            pid_for_kill = pid_worker.select_resource_intensive_process(processes, host_connection, wm_database_connection)
             pid_worker.kill_process_by_pid(pid_for_kill, wm_database_connection)
             logger.log_message("Pid %s was killed" % pid_for_kill)
             time.sleep(config.RECALCULATE_SYSTEM_LOAD_PAUSE_SEC)
