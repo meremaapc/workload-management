@@ -1,5 +1,6 @@
-import domain
 import datetime
+
+import domain
 from config import WORKLOAD_PERCENTAGE_LIMIT
 from util.host_info import get_cpu_core_count, get_ram_load
 
@@ -10,11 +11,11 @@ CPU_PARAM = "pcpu"
 
 
 def collect_cluster_workload(processes, wm_db_connection, host_connection):
-    metrics = get_metrics(host_connection, wm_db_connection)
+    metrics = get_metrics(wm_db_connection)
 
     print(datetime.datetime.now(), ": process count = %s" % len(processes))
 
-    processes_info = get_info_about_all_pg_processes(host_connection, processes, list(metrics.keys()))
+    processes_info = get_info_about_all_pg_processes(host_connection, processes, list(map(lambda metric: metric['name'], metrics)))
     cluster_workload = calculate_cluster_workload(host_connection, processes_info, metrics)
 
     print(datetime.datetime.now(), ': cluster workload = %s' % cluster_workload)
@@ -31,10 +32,6 @@ def calculate_cluster_workload(host_connection, processes_info, metrics):
 def calculate_process_workload(cpu, ram, metrics):
     # !todo change to formula
     state = 50
-    if cpu > metrics['pcpu']:
-        state += 25
-    if ram > metrics['pmem']:
-        state += 25
     return state
 
 
@@ -47,16 +44,11 @@ def get_info_about_all_pg_processes(host_connection, processes, params):
     result_list = []
     for line in ssh_stdout:
         result_list.append(dict(zip(params, line.split())))
+    crop_cpu_metric(host_connection, result_list)
     return result_list
 
 
-def metrics_to_dict(metrics):
-    return dict(zip(
-        map(lambda metric: metric['name'], metrics),
-        map(lambda metric: metric['priority'], metrics)))
-
-
-def get_metrics(host_connection, wm_db_connection):
+def get_metrics(wm_db_connection):
     metrics = []
     try:
         cursor = wm_db_connection.cursor()
@@ -68,11 +60,10 @@ def get_metrics(host_connection, wm_db_connection):
     finally:
         if wm_db_connection:
             cursor.close()
-    metrics = metrics_to_dict(metrics)
-    crop_cpu_metric(host_connection, metrics)
     return metrics
 
 
 def crop_cpu_metric(host_connection, metrics):
-    if CPU_PARAM in metrics:
-        metrics[CPU_PARAM] = metrics.get('pcpu') / int(get_cpu_core_count(host_connection))
+    cpu_cores = int(get_cpu_core_count(host_connection))
+    for metric in metrics:
+        metric[CPU_PARAM] = float(metric[CPU_PARAM]) / cpu_cores

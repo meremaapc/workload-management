@@ -3,7 +3,6 @@ import psycopg2
 import config
 import domain.query_constant
 import domain.query_constant
-from connection.db_connection import connect
 from domain.pg_stat_activity import Stat_Activity
 
 
@@ -51,9 +50,8 @@ def get_data_from_pg_stat_activity(conn):
             cursor.close()
 
 
-def create_wm_database():
+def create_wm_database(conn):
     try:
-        conn = connect()
         cursor = conn.cursor()
         with open('sql/workload_management_create_database.sql') as script:
             cursor.execute(script.read())

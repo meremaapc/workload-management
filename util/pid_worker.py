@@ -4,9 +4,9 @@ from util.workload_service import calculate_process_workload, get_metrics, get_i
 
 
 def select_resource_intensive_process(processes, host_connection, wm_db_connection):
-    processes = list(filter(lambda item: str(item.backend_type) == CLIENT_BACKEND and HINT in str(item.query), processes))
-    metrics = get_metrics(host_connection, wm_db_connection)
-    processes_info = get_info_about_all_pg_processes(host_connection, processes, list(metrics.keys()))
+    processes = list(filter(lambda item: str(item.backend_type) == CLIENT_BACKEND and HINT not in str(item.query), processes))
+    metrics = get_metrics(wm_db_connection)
+    processes_info = get_info_about_all_pg_processes(host_connection, processes, list(map(lambda metric: metric['name'], metrics)))
     result = max(zip(
         map(lambda process: calculate_process_workload(float(process['pcpu']), float(process['pmem']), metrics),
             processes_info),

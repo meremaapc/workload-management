@@ -6,7 +6,9 @@ CREATE TABLE IF NOT EXISTS wm.metrics (
                                           id SERIAL PRIMARY KEY,
                                           name varchar(16) unique,
                                           threshold smallint,
-                                          CONSTRAINT priority_check CHECK (priority <= 100)
+                                          priority smallint,
+                                          CONSTRAINT priority_check CHECK (priority <= 100),
+                                          CONSTRAINT threshold_check CHECK (threshold <= 100)
 );
 
 CREATE OR REPLACE FUNCTION wm.init_insert_metrics()
@@ -15,9 +17,9 @@ $$ DECLARE table_size smallint;
 BEGIN
     table_size = (SELECT count(*) FROM wm.metrics);
     if table_size = 0 then
-        INSERT INTO wm.metrics(name, threshold)
-        VALUES ('pcpu', 75),
-               ('pmem', 75);
+        INSERT INTO wm.metrics(name, threshold, priority)
+        VALUES ('pcpu', 75, 50),
+               ('pmem', 75, 50);
     end if;
 END
 $$ language plpgsql;
