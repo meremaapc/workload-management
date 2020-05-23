@@ -10,7 +10,7 @@ WM_DB_CONFIG = {
     'host': 'ec2-3-93-22-107.compute-1.amazonaws.com',
     'user': 'postgres',
     'port': '5432',
-    'dbname': 'workload_management',
+    'dbname': 'workload_management1',
     'password': 'postgres'
 }
 
