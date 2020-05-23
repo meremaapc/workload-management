@@ -1,13 +1,11 @@
 import datetime
 
-import domain
-from config import WORKLOAD_PERCENTAGE_LIMIT
+from config import CPU_PARAM, RAM_PARAM, PID_PARAM
+from connection.workload_managment_db import get_metrics, store_current_workload
 from util.host_info import get_cpu_core_count, get_ram_load
 
 COMMAND = "ps -p %s -o %s"
 DELIMITER = ","
-PID_PARAM = "pid"
-CPU_PARAM = "pcpu"
 
 
 def collect_cluster_workload(processes, wm_db_connection, host_connection):
@@ -15,24 +13,36 @@ def collect_cluster_workload(processes, wm_db_connection, host_connection):
 
     print(datetime.datetime.now(), ": process count = %s" % len(processes))
 
-    processes_info = get_info_about_all_pg_processes(host_connection, processes, list(map(lambda metric: metric['name'], metrics)))
+    processes_info = get_info_about_all_pg_processes(host_connection, processes, list(map(lambda metric: metric.name, metrics)))
     cluster_workload = calculate_cluster_workload(host_connection, processes_info, metrics)
 
     print(datetime.datetime.now(), ': cluster workload = %s' % cluster_workload)
 
-    return cluster_workload >= WORKLOAD_PERCENTAGE_LIMIT
+    limit_workload = calculate_workload_percentage_limit(metrics)
+    store_current_workload(wm_db_connection, cluster_workload)
+
+    return cluster_workload >= limit_workload
+
+
+def calculate_workload_percentage_limit(metrics):
+    workload_limit = 0
+    for metric in metrics:
+        workload_limit += metric.threshold * metric.priority / 100
+    return workload_limit
 
 
 def calculate_cluster_workload(host_connection, processes_info, metrics):
     ram_load = get_ram_load(host_connection)
-    cpu_load = sum(map(lambda item: float(item['pcpu']), processes_info))
-    return calculate_process_workload(ram_load, cpu_load, metrics)
+    cpu_load = sum(map(lambda item: float(item[CPU_PARAM]), processes_info))
+    metrics_dict = {CPU_PARAM: cpu_load, RAM_PARAM: ram_load}
+    return calculate_process_workload(metrics_dict, metrics)
 
 
-def calculate_process_workload(cpu, ram, metrics):
-    # !todo change to formula
-    state = 50
-    return state
+def calculate_process_workload(metric_value, metrics):
+    workload = 0
+    for metric in metrics:
+        workload += metric_value[metric.name] * metric.priority / 100
+    return workload
 
 
 def get_info_about_all_pg_processes(host_connection, processes, params):
@@ -46,21 +56,6 @@ def get_info_about_all_pg_processes(host_connection, processes, params):
         result_list.append(dict(zip(params, line.split())))
     crop_cpu_metric(host_connection, result_list)
     return result_list
-
-
-def get_metrics(wm_db_connection):
-    metrics = []
-    try:
-        cursor = wm_db_connection.cursor()
-        cursor.execute(domain.query_constant.SELECT_METRICS)
-        columns = cursor.description
-        metrics = [{columns[index][0]: column for index, column in enumerate(value)} for value in cursor.fetchall()]
-    except Exception as error:
-        print(error)
-    finally:
-        if wm_db_connection:
-            cursor.close()
-    return metrics
 
 
 def crop_cpu_metric(host_connection, metrics):

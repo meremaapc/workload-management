@@ -3,6 +3,7 @@ import psycopg2
 import config
 import domain.query_constant
 import domain.query_constant
+from domain.metric import Metric
 from domain.pg_stat_activity import Stat_Activity
 
 
@@ -50,12 +51,41 @@ def get_data_from_pg_stat_activity(conn):
             cursor.close()
 
 
+def get_metrics(wm_db_connection):
+    metrics = []
+    try:
+        cursor = wm_db_connection.cursor()
+        cursor.execute(domain.query_constant.SELECT_METRICS)
+        for value in cursor.fetchall():
+            metric = Metric(value[0], value[1], value[2], value[3])
+            metrics.append(metric)
+    except Exception as error:
+        print(error)
+    finally:
+        if wm_db_connection:
+            cursor.close()
+    return metrics
+
+
+def store_current_workload(conn, value):
+    try:
+        cursor = conn.cursor()
+        cursor.execute(domain.query_constant.INSERT_WORKLOAD, (value,))
+        conn.commit()
+    except Exception as error:
+        print(error)
+    finally:
+        if conn:
+            cursor.close()
+
+
 def create_wm_database(conn):
     try:
         cursor = conn.cursor()
         with open('sql/workload_management_create_database.sql') as script:
             cursor.execute(script.read())
-        cursor.execute(domain.query_constant.CREATE_DATABASE, (config.MAIN_DB_CONFIG['user'], config.MAIN_DB_CONFIG['password']))
+        cursor.execute(domain.query_constant.CREATE_DATABASE,
+                       (config.MAIN_DB_CONFIG['user'], config.MAIN_DB_CONFIG['password']))
         conn.commit()
         conn.close()
     except (Exception, psycopg2.Error) as error:

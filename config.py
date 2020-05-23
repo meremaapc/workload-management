@@ -1,5 +1,5 @@
 MAIN_DB_CONFIG = {
-    'host': 'ec2-54-164-123-156.compute-1.amazonaws.com',
+    'host': 'ec2-3-93-22-107.compute-1.amazonaws.com',
     'user': 'postgres',
     'port': '5432',
     'dbname': 'postgres',
@@ -7,7 +7,7 @@ MAIN_DB_CONFIG = {
 }
 
 WM_DB_CONFIG = {
-    'host': 'ec2-54-164-123-156.compute-1.amazonaws.com',
+    'host': 'ec2-3-93-22-107.compute-1.amazonaws.com',
     'user': 'postgres',
     'port': '5432',
     'dbname': 'workload_management',
@@ -15,7 +15,7 @@ WM_DB_CONFIG = {
 }
 
 REMOTE_SERVER_CONFIG = {
-    'host': 'ec2-54-164-123-156.compute-1.amazonaws.com',
+    'host': 'ec2-3-93-22-107.compute-1.amazonaws.com',
     'user': 'ubuntu',
     'port': '22',
     'key': 'course_work_key.pem'
@@ -26,7 +26,8 @@ RECALCULATE_SYSTEM_LOAD_PAUSE_SEC = 45
 REQUEST_PAUSE_SEC = 45
 MONITORING_PAUSE = 30
 
-WORKLOAD_PERCENTAGE_LIMIT = 11
-
 HINT = '/*backend query*/'
 CLIENT_BACKEND = 'client backend'
+PID_PARAM = "pid"
+CPU_PARAM = "pcpu"
+RAM_PARAM = "pmem"

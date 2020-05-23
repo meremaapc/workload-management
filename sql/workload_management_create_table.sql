@@ -11,6 +11,12 @@ CREATE TABLE IF NOT EXISTS wm.metrics (
                                           CONSTRAINT threshold_check CHECK (threshold <= 100)
 );
 
+CREATE TABLE IF NOT EXISTS wm.workload(
+                                        id SERIAL PRIMARY KEY,
+                                        workload_value float
+);
+
+
 CREATE OR REPLACE FUNCTION wm.init_insert_metrics()
     RETURNS VOID AS
 $$ DECLARE table_size smallint;
