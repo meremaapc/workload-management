@@ -1,10 +1,8 @@
 import psycopg2
 
-import config
-import domain.query_constant
-import domain.query_constant
-from domain.metric import Metric
-from domain.pg_stat_activity import Stat_Activity
+from web.web import config
+from web.wm import query_constant
+from web.wm.models import Stat_Activity, Metric
 
 
 def execute_init_sql(conn):
@@ -23,7 +21,7 @@ def execute_init_sql(conn):
 def store_cluster_statistic(conn, cpu, ram):
     try:
         cursor = conn.cursor()
-        cursor.execute(domain.query_constant.INSERT_STATISTIC, (cpu, ram))
+        cursor.execute(query_constant.INSERT_STATISTIC, (cpu, ram))
         conn.commit()
     except Exception as error:
         print(error)
@@ -35,7 +33,7 @@ def store_cluster_statistic(conn, cpu, ram):
 def get_data_from_pg_stat_activity(conn):
     try:
         cursor = conn.cursor()
-        cursor.execute(domain.query_constant.SELECT_PG_STAT_ACTIVITY)
+        cursor.execute(query_constant.SELECT_PG_STAT_ACTIVITY)
         rows = cursor.fetchall()
         objects_list = []
         for row in rows:
@@ -55,7 +53,7 @@ def get_metrics(wm_db_connection):
     metrics = []
     try:
         cursor = wm_db_connection.cursor()
-        cursor.execute(domain.query_constant.SELECT_METRICS)
+        cursor.execute(query_constant.SELECT_METRICS)
         for value in cursor.fetchall():
             metric = Metric(value[0], value[1], value[2], value[3])
             metrics.append(metric)
@@ -70,7 +68,7 @@ def get_metrics(wm_db_connection):
 def store_current_workload(conn, value):
     try:
         cursor = conn.cursor()
-        cursor.execute(domain.query_constant.INSERT_WORKLOAD, (value,))
+        cursor.execute(query_constant.INSERT_WORKLOAD, (value,))
         conn.commit()
     except Exception as error:
         print(error)
@@ -84,7 +82,7 @@ def create_wm_database(conn):
         cursor = conn.cursor()
         with open('sql/workload_management_create_database.sql') as script:
             cursor.execute(script.read())
-        cursor.execute(domain.query_constant.CREATE_DATABASE,
+        cursor.execute(query_constant.CREATE_DATABASE,
                        (config.MAIN_DB_CONFIG['user'], config.MAIN_DB_CONFIG['password']))
         conn.commit()
         conn.close()

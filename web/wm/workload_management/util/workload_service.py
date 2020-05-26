@@ -1,8 +1,8 @@
 import datetime
 
-from config import CPU_PARAM, RAM_PARAM, PID_PARAM
-from connection.workload_managment_db import get_metrics, store_current_workload
-from util.host_info import get_cpu_core_count, get_ram_load
+from web.web.config import CPU_PARAM, RAM_PARAM, PID_PARAM
+from web.wm.workload_management.connection.workload_managment_db import get_metrics, store_current_workload
+from web.wm.workload_management.util.host_info import get_ram_load, get_cpu_core_count
 
 COMMAND = "ps -p %s -o %s"
 DELIMITER = ","

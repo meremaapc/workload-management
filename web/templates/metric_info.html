@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>metrics</title>
+    <link rel="stylesheet" media="screen" href="/static/style.css" >
+</head>
+<body>
+<form class="contact_form">
+<ul>
+    <li>
+         <h2>Metric info</h2>
+         <span class="required_notification"> Here is information about the main metrics of microservice </span>
+    </li>
+    <li>
+        <p>CPU</p>
+        <table border="0" width="50%">
+           <tr>
+            <th>Threshold</th>
+            <th>Priority</th>
+           </tr>
+           <tr>
+            <td>{{cpu_threshold}}</td>
+            <td>{{cpu_priority}}</td>
+          </tr>
+         </table>
+    </li>
+    <li>
+        <p>RAM</p>
+        <table border="0" width="50%">
+           <tr>
+            <th>Threshold</th>
+            <th>Priority</th>
+           </tr>
+           <tr>
+            <td>{{ram_threshold}}</td>
+            <td>{{ram_priority}}</td>
+          </tr>
+         </table>
+    </li>
+    <li>
+        <button class="button" onclick="window.location.href = 'http://localhost:8000/wm/update_metrics/';">Update metrics</button>
+    </li>
+</ul>
+
+</form>
+</body>
+</html>

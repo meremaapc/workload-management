@@ -1,9 +1,9 @@
 import time
 
-import config
-from connection.workload_managment_db import get_data_from_pg_stat_activity
-from connections import host_connect, database_connect
-from util import workload_service, pid_worker
+from web.web import config
+from web.wm.workload_management.connection.workload_managment_db import get_data_from_pg_stat_activity
+from web.wm.workload_management.connections import host_connect, database_connect
+from web.wm.workload_management.util import workload_service, pid_worker
 
 
 def workload_management_run():

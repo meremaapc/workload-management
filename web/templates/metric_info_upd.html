@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>metrics upd</title>
+    <link rel="stylesheet" media="screen" href="../static/style.css" >
+</head>
+<body>
+<form class="contact_form" action="/wm/upd_metrics" method="post" name="contact_form">
+    <ul>
+        <li>
+            <h2>Metric info</h2>
+            <span class="required_notification"> Here is information about the main metrics of microservice </span>
+        </li>
+        <li>
+            <p>CPU</p>
+            <label for="cpu_threshold"> Threshold </label>
+            <input name="cpu_threshold" type="text"/>
+            <label for="cpu_priority"> Priority </label>
+            <input name="cpu_priority" type="text"/>
+        </li>
+        <li>
+            <p>RAM</p>
+            <label for="ram_threshold"> Threshold </label>
+            <input name="ram_threshold" type="text"/>
+            <label for="ram_priority"> Priority </label>
+            <input name="ram_priority" type="text"/>
+        </li>
+        <li>
+            <button class="button_upd" type="submit">Update metrics</button>
+        </li>
+    </ul>
+</form>
+</body>
+</html>

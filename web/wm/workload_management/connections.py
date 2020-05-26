@@ -1,6 +1,6 @@
-from config import WM_DB_CONFIG, MAIN_DB_CONFIG
-from connection import db_connection, remote_server_connection, workload_managment_db
-from connection.workload_managment_db import create_wm_database
+from web.web.config import MAIN_DB_CONFIG, WM_DB_CONFIG
+from web.wm.workload_management.connection import remote_server_connection, db_connection, workload_managment_db
+from web.wm.workload_management.connection.workload_managment_db import create_wm_database
 
 
 def host_connect():

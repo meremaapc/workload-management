@@ -1,5 +1,6 @@
 import paramiko
-import config
+
+from web.web import config
 
 
 def connect():

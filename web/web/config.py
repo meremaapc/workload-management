@@ -1,5 +1,5 @@
 MAIN_DB_CONFIG = {
-    'host': 'ec2-3-93-22-107.compute-1.amazonaws.com',
+    'host': 'ec2-54-242-190-240.compute-1.amazonaws.com',
     'user': 'postgres',
     'port': '5432',
     'dbname': 'postgres',
@@ -7,15 +7,15 @@ MAIN_DB_CONFIG = {
 }
 
 WM_DB_CONFIG = {
-    'host': 'ec2-3-93-22-107.compute-1.amazonaws.com',
+    'host': 'ec2-54-242-190-240.compute-1.amazonaws.com',
     'user': 'postgres',
     'port': '5432',
-    'dbname': 'workload_management1',
+    'dbname': 'workload_management',
     'password': 'postgres'
 }
 
 REMOTE_SERVER_CONFIG = {
-    'host': 'ec2-3-93-22-107.compute-1.amazonaws.com',
+    'host': 'ec2-54-242-190-240.compute-1.amazonaws.com',
     'user': 'ubuntu',
     'port': '22',
     'key': 'course_work_key.pem'
