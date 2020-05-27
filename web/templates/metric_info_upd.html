@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+{% load staticfiles %}
 <html>
 <head>
     <meta charset="utf-8">
     <title>metrics upd</title>
-    <link rel="stylesheet" media="screen" href="../static/style.css" >
+    <link rel="stylesheet" media="screen" href="{% static 'style.css' %}" >
 </head>
 <body>
-<form class="contact_form" action="/wm/upd_metrics" method="post" name="contact_form">
+<form class="contact_form" action="/upd_metrics" method="post" name="contact_form">
     <ul>
         <li>
             <h2>Metric info</h2>
