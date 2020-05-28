@@ -1,5 +1,3 @@
-from django.db import models
-
 class Metric:
     def __init__(self, id, name, threshold, priority):
         self.id = id
@@ -12,9 +10,26 @@ class Metric:
         self.threshold = threshold
         self.priority = priority
 
+
+class Workload:
+    def __init__(self, id, value, date):
+        self.id = id
+        self.value = value
+        self.date = date
+
+
+class Cluster_Statistic:
+    def __init__(self, cpu_usage, ram_usage, date):
+        self.date = date
+        self.cpu_usage = cpu_usage
+        self.ram_usage = ram_usage
+
+
 class Stat_Activity:
-    def __init__(self, datid, datname, pid, usesysid, usename, application_name, client_addr, client_hostname, client_port,  backend_start,
-                 xact_start, query_start, state_change, wait_event_type, wait_event, state, backend_xid, backend_xmin, query, backend_type):
+    def __init__(self, datid, datname, pid, usesysid, usename, application_name, client_addr, client_hostname,
+                 client_port, backend_start,
+                 xact_start, query_start, state_change, wait_event_type, wait_event, state, backend_xid, backend_xmin,
+                 query, backend_type):
         self.datid = datid
         self.datname = datname
         self.pid = pid

@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS wm.metrics (
 
 CREATE TABLE IF NOT EXISTS wm.workload(
                                         id SERIAL PRIMARY KEY,
-                                        workload_value float
+                                        workload_value float,
+                                        date TIMESTAMP DEFAULT current_timestamp
 );
 
 

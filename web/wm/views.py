@@ -1,8 +1,7 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from .charts.chart import chart
+from .charts import chart
 from .metrics import metrics_action
 from .metrics.metrics_action import update_metrics_info
 from .models import Metric
@@ -21,10 +20,6 @@ def get_metrics(request):
     return render(request, 'metric_info.html', result)
 
 
-def workload_chart(request):
-    return chart(request)
-
-
 def get_update_page(request):
     return render(request, 'metric_info_upd.html')
 
@@ -37,3 +32,15 @@ def put_metrics(request):
     }
     update_metrics_info(metrics)
     return redirect('/wm/metrics')
+
+
+def workload_charts(request):
+    return chart.workload()
+
+
+def cpu_charts(request):
+    return chart.cpu()
+
+
+def ram_charts(request):
+    return chart.ram()
